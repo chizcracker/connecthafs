@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  #get 'user/show'
+  # get 'user/show'
   get 'user', to: 'user#show'
 
   # The priority is based upon order of creation: first created -> highest priority.
