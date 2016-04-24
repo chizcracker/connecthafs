@@ -7,4 +7,7 @@ class UserController < ApplicationController
       format.json { render json: @user }
     end
   end
+
+  def update
+  end
 end
