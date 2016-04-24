@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
-  # get 'user/show'
-  get 'user', to: 'user#show'
+  resources :user, only: [:show]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
