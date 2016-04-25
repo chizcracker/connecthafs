@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :user, only: [:show, :update]
+  resources :users, only: [:show, :update]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
