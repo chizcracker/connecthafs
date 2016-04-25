@@ -65,40 +65,64 @@ var EditableField = React.createClass({
 
   getInitialState: function() {
     return {
+      value: this.props.value,
       editactive: false
     };
   },
 
-  _onButtonClick: function(value) {
+  _sendRequest: function() {
+    // TODO: Add necessary query params and test that it
+    // works once backend is ready. Also, new value (in
+    // _onButtonClick function) should only be set on
+    // SUCCESS case.
+
+    if (this.state.editactive) {
+      var request = new XMLHttpRequest();
+      request.open("PUT", "/users/" + this.props.id);
+      request.onreadystatechange = function() {
+        if(request.readyState === XMLHttpRequest.DONE &&
+           request.status === 200) {
+          // SUCCESS
+        }
+      };
+      request.send();
+    }
+  },
+
+  _onButtonClick: function() {
+    // this._sendRequest();
+
     this.setState({
+      value: this._currentValue,
       editactive: !this.state.editactive
     });
   },
 
   render: function() {
-    valueElement = <span>{this.props.value}</span>;
+    valueElement = <span>{this.state.value}</span>;
     if (this.state.editactive) {
       valueElement = 
         <input
           type="text"
-          placeholder={this.props.value}
+          placeholder={this.state.value}
+          onChange={(e) => {
+            this._currentValue = e.target.value;
+          }}
         />;
     }
 
     var editButton =
-      <input
+      <button
         type="button"
-        onClick={() => this._onButtonClick(valueElement.value)}
-        value="Edit"
-      />;
+        onClick={this._onButtonClick}>
+        Edit
+      </button>;
 
     return (
       <div>
         <span>{this.props.field}: </span>
-        <form>
-          {valueElement}
-          {editButton}
-        </form>
+        {valueElement}
+        {editButton}
       </div>
     );
   }
