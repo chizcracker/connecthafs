@@ -21,11 +21,31 @@ describe UsersController, type: :controller do
   end
 
   describe "PUT #update" do
-    let(:user_id) { User.create!.id }
+    let(:user) { User.create!(name: "name", phonenumber: "123-4567") }
+    let(:user_id) { user.id }
+    let(:update_hash) do
+      { phonenumber: "new_phone_number" }
+    end
 
     it "returns http success" do
-      post :update, {id: user_id}, {}
+      put :update, { id: user_id }.merge(update_hash)
       expect(response).to have_http_status(:success)
+    end
+
+    it "updates record" do
+      put :update, { id: user_id }.merge(update_hash)
+      body = JSON.parse(response.body)
+      expect(body['phonenumber']).to eq(update_hash[:phonenumber])
+    end
+
+    context 'with non-existing user' do
+      let(:user_id) { SecureRandom.uuid }
+
+      it "returns 404" do
+        expect{
+          put :update, { id: user_id }.merge(update_hash)
+        }.to raise_exception(ActiveRecord::RecordNotFound)
+      end
     end
   end
 end
