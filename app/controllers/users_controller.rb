@@ -1,13 +1,31 @@
 class UsersController < ApplicationController
-  def show
-    @user = User.find(params[:id])
+  before_filter :load_user, only: [:show, :update]
 
+  def show
     respond_to do |format|
       format.html
       format.json { render json: @user }
     end
   end
 
+  UPDATE_ATTRS = [:phone_number, :address]
+
   def update
+    @user.update_attributes(sliced_params)
+    render json: @user, root: false
+  end
+
+  private
+
+  def sliced_params
+    Hash[
+      UPDATE_ATTRS.map do |attr|
+        [attr, params[attr.to_s.camelize(:lower)]]
+      end
+    ]
+  end
+
+  def load_user
+    @user = User.find(params[:id])
   end
 end
