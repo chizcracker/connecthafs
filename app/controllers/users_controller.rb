@@ -12,7 +12,7 @@ class UsersController < ApplicationController
 
   def update
     @user.update_attributes(params.permit(*UPDATE_ATTRS))
-    render json: @user
+    render json: @user, root: false
   end
 
   private
