@@ -8,14 +8,22 @@ class UsersController < ApplicationController
     end
   end
 
-  UPDATE_ATTRS = [:phonenumber, :address]
+  UPDATE_ATTRS = [:phone_number, :address]
 
   def update
-    @user.update_attributes(params.permit(*UPDATE_ATTRS))
+    @user.update_attributes(sliced_params)
     render json: @user, root: false
   end
 
   private
+
+  def sliced_params
+    Hash[
+      UPDATE_ATTRS.map do |attr|
+        [attr, params[attr.to_s.camelize(:lower)]]
+      end
+    ]
+  end
 
   def load_user
     @user = User.find(params[:id])

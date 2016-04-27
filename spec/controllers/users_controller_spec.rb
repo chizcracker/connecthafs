@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe UsersController, type: :controller do
   describe "GET #show" do
-    context 'with existing user' do
+    context "with existing user" do
       let(:user_id) { User.create!.id }
 
       it "returns http success" do
@@ -11,7 +11,7 @@ describe UsersController, type: :controller do
       end
     end
 
-    context 'with non-existing user' do
+    context "with non-existing user" do
       let(:user_id) { SecureRandom.uuid }
 
       it "returns 404" do
@@ -21,10 +21,10 @@ describe UsersController, type: :controller do
   end
 
   describe "PUT #update" do
-    let(:user) { User.create!(name: "name", phonenumber: "123-4567") }
+    let(:user) { User.create!(name: "name", phone_number: "123-4567") }
     let(:user_id) { user.id }
     let(:update_hash) do
-      { phonenumber: "new_phone_number" }
+      { "phoneNumber" => "new_phone_number" }
     end
 
     it "returns http success" do
@@ -35,10 +35,10 @@ describe UsersController, type: :controller do
     it "updates record" do
       put :update, { id: user_id }.merge(update_hash)
       body = JSON.parse(response.body)
-      expect(body['phonenumber']).to eq(update_hash[:phonenumber])
+      expect(body["phoneNumber"]).to eq(update_hash["phoneNumber"])
     end
 
-    context 'with non-existing user' do
+    context "with non-existing user" do
       let(:user_id) { SecureRandom.uuid }
 
       it "returns 404" do
