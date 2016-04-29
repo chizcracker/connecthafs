@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :groups, only: [:show]
   resources :users, only: [:show, :update]
 
   # The priority is based upon order of creation: first created -> highest priority.
