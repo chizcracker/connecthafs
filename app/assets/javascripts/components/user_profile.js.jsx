@@ -8,6 +8,25 @@ var UserProfile = React.createClass({
     editmode: React.PropTypes.bool
   },
 
+  _getEditableElement(field, value) {
+    var fieldToRequestKeyMap = {
+      'Phone Number': 'phoneNumber',
+      'Address': 'address',
+    };
+
+    console.log(field, value);
+
+    return(
+      <EditableField
+        id={this.props.id}
+        field={field}
+        value={value}
+        editmode={this.props.editmode}
+        requestKey={fieldToRequestKeyMap[field]}
+      />
+    );
+  },
+
   render: function() {
     // Non-editables
     var name =
@@ -21,26 +40,15 @@ var UserProfile = React.createClass({
       </div>;
 
     // Editables
-    var phoneNumberField = 'Phone Number';
-    var phoneNumberValue = this.props.phonenumber;
-    var phoneNumberElement =
-      <EditableField
-        id={this.props.id}
-        field={phoneNumberField}
-        value={phoneNumberValue}
-        editmode={this.props.editmode}
-      />;
+    var phoneNumberElement = this._getEditableElement(
+      'Phone Number',
+      this.props.phonenumber,
+    );
+    var addressElement = this._getEditableElement(
+      'Address',
+      this.props.address,
+    );
 
-    var addressField = 'Address';
-    var addressValue = this.props.address;
-    var addressElement =
-      <EditableField
-        id={this.props.id}
-        field={addressField}
-        value={addressValue}
-        editmode={this.props.editmode}
-      />;
-        
     return (
       <div>
         {name}
@@ -61,6 +69,7 @@ var EditableField = React.createClass({
       React.PropTypes.number
     ]),
     editmode: React.PropTypes.bool,
+    requestKey: React.PropTypes.string,
   },
 
   getInitialState: function() {
@@ -70,32 +79,33 @@ var EditableField = React.createClass({
     };
   },
 
-  _sendRequest: function() {
-    // TODO: Add necessary query params and test that it
-    // works once backend is ready. Also, new value (in
-    // _onButtonClick function) should only be set on
-    // SUCCESS case.
-
-    if (this.state.editactive) {
-      var request = new XMLHttpRequest();
-      request.open("PUT", "/users/" + this.props.id);
-      request.onreadystatechange = function() {
-        if(request.readyState === XMLHttpRequest.DONE &&
-           request.status === 200) {
-          // SUCCESS
-        }
-      };
-      request.send();
-    }
+  _sendEditRequest: function() {
+    var request = new XMLHttpRequest();
+    request.open(
+      "PUT",
+      '/users/' + this.props.id + '?' +
+        this.props.requestKey + '=' + this._currentValue,
+    );
+    request.onreadystatechange = () => {
+      if(
+        request.readyState === XMLHttpRequest.DONE &&
+        request.status === 200
+      ) {
+        this.setState({
+          value: this._currentValue,
+          editactive: !this.state.editactive
+        });
+      }
+    };
+    request.send();
   },
 
-  _onButtonClick: function() {
-    // this._sendRequest();
-
-    this.setState({
-      value: this._currentValue,
-      editactive: !this.state.editactive
-    });
+  _onEditButtonClick: function() {
+    if (this.state.editactive) {
+      this._sendEditRequest();
+    } else {
+      this.setState({ editactive: !this.state.editactive });
+    }
   },
 
   render: function() {
@@ -114,7 +124,7 @@ var EditableField = React.createClass({
     var editButton =
       <button
         type="button"
-        onClick={this._onButtonClick}>
+        onClick={this._onEditButtonClick}>
         Edit
       </button>;
 
