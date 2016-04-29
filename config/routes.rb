@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'main', to: 'main#index'
+
   resources :groups, only: [:show]
   resources :users, only: [:show, :update]
 
