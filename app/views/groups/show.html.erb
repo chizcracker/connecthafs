@@ -1,2 +1,12 @@
-<h1>Groups#show</h1>
-<p>Find me in app/views/groups/show.html.erb</p>
+<!DOCTYPE html>
+<html>
+<body>
+  <%= react_component(
+    'GroupProfile',
+    name: @group.name,
+    address: @group.address,
+    type: @group.type
+  ) %>
+</body>
+</html>
+
