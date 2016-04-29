@@ -1,6 +1,5 @@
 class Group < ActiveRecord::Base
+  scope :highschools, -> { where(type: 'Highschool') }
+  scope :universities, -> { where(type: 'University') }
+  scope :works, -> { where(type:'Work' ) }
 end
-
-class HighSchool < Group; end
-class University < Group; end
-class Company < Group; end
