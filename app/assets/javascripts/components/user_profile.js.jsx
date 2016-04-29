@@ -14,8 +14,6 @@ var UserProfile = React.createClass({
       'Address': 'address',
     };
 
-    console.log(field, value);
-
     return(
       <EditableField
         id={this.props.id}
