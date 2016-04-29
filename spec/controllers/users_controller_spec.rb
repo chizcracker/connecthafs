@@ -21,7 +21,7 @@ describe UsersController, type: :controller do
   end
 
   describe "PUT #update" do
-    let(:user) { User.create!(name: "name", phone_number: "123-4567") }
+    let(:user) { User.create!(name: "name", phone_number: "123-4567", address: "address") }
     let(:user_id) { user.id }
     let(:update_hash) do
       { "phoneNumber" => "new_phone_number" }
@@ -32,10 +32,27 @@ describe UsersController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    it "updates record" do
-      put :update, { id: user_id }.merge(update_hash)
-      body = JSON.parse(response.body)
-      expect(body["phoneNumber"]).to eq(update_hash["phoneNumber"])
+    context "updates" do
+      it "only provided field" do
+        put :update, { id: user_id }.merge(update_hash)
+        body = JSON.parse(response.body)
+        expect(body["phoneNumber"]).to eq(update_hash["phoneNumber"])
+        expect(body["address"]).to eq("address")
+      end
+
+      it "as provided" do
+        put :update, { id: user_id, address: nil }.merge(update_hash)
+        body = JSON.parse(response.body)
+        expect(body["phoneNumber"]).to eq(update_hash["phoneNumber"])
+        expect(body["address"]).to eq(nil)
+      end
+
+      it "only editable field" do
+        put :update, { id: user_id, name: "some other name" }.merge(update_hash)
+        body = JSON.parse(response.body)
+        expect(body["phoneNumber"]).to eq(update_hash["phoneNumber"])
+        expect(body["name"]).to eq("name")
+      end
     end
 
     context "with non-existing user" do

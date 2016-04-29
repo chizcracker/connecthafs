@@ -20,8 +20,9 @@ class UsersController < ApplicationController
   def sliced_params
     Hash[
       UPDATE_ATTRS.map do |attr|
-        [attr, params[attr.to_s.camelize(:lower)]]
-      end
+        key = attr.to_s.camelize(:lower)
+        [attr, params[key]] if params.key?(key)
+      end.compact
     ]
   end
 
