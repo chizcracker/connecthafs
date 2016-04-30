@@ -1,1 +1,0 @@
-class University < Group; end
