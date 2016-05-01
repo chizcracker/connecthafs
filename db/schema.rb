@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160429053446) do
+ActiveRecord::Schema.define(version: 20160501023818) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,22 @@ ActiveRecord::Schema.define(version: 20160429053446) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_works", force: :cascade do |t|
+    t.string   "location"
+    t.string   "team"
+    t.string   "title"
+    t.date     "work_start"
+    t.date     "work_end"
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.uuid     "user_id"
+    t.uuid     "work_id"
+  end
+
+  add_index "user_works", ["user_id"], name: "index_user_works_on_user_id", using: :btree
+  add_index "user_works", ["work_id"], name: "index_user_works_on_work_id", using: :btree
+
   create_table "users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "name"
     t.string   "phone_number"
@@ -34,4 +50,6 @@ ActiveRecord::Schema.define(version: 20160429053446) do
     t.datetime "updated_at",   null: false
   end
 
+  add_foreign_key "user_works", "groups", column: "work_id"
+  add_foreign_key "user_works", "users"
 end
