@@ -25,6 +25,22 @@ ActiveRecord::Schema.define(version: 20160501023818) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_educations", force: :cascade do |t|
+    t.date     "attended_from"
+    t.date     "attended_to"
+    t.string   "field"
+    t.string   "grade"
+    t.text     "activities"
+    t.text     "description"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.uuid     "user_id"
+    t.uuid     "education_id"
+  end
+
+  add_index "user_educations", ["education_id"], name: "index_user_educations_on_education_id", using: :btree
+  add_index "user_educations", ["user_id"], name: "index_user_educations_on_user_id", using: :btree
+
   create_table "user_works", force: :cascade do |t|
     t.string   "location"
     t.string   "team"
@@ -50,6 +66,8 @@ ActiveRecord::Schema.define(version: 20160501023818) do
     t.datetime "updated_at",   null: false
   end
 
+  add_foreign_key "user_educations", "groups", column: "education_id"
+  add_foreign_key "user_educations", "users"
   add_foreign_key "user_works", "groups", column: "work_id"
   add_foreign_key "user_works", "users"
 end
