@@ -1,1 +1,0 @@
-class HighSchool < Group; end
