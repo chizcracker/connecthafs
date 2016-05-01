@@ -15,6 +15,10 @@ class UsersController < ApplicationController
     render json: @user, root: false
   end
 
+  def index
+    render json: User.all, root: false
+  end
+
   private
 
   def sliced_params

@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   get 'main', to: 'main#index'
 
   resources :groups, only: [:show]
-  resources :users, only: [:show, :update]
+  resources :users, only: [:index, :show, :update]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

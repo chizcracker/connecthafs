@@ -1,6 +1,25 @@
 require 'rails_helper'
 
 describe UsersController, type: :controller do
+  describe "GET #index" do
+    context "with existing user" do
+      let(:user_count) { rand(1..5) }
+
+      before { user_count.times { User.create! } }
+
+      it "returns http success" do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+
+      it "returns user list" do
+        get :index
+        body = JSON.parse(response.body)
+        expect(body.count).to eq(user_count)
+      end
+    end
+  end
+
   describe "GET #show" do
     context "with existing user" do
       let(:user_id) { User.create!.id }
