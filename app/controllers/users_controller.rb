@@ -19,6 +19,11 @@ class UsersController < ApplicationController
     render json: User.all, root: false
   end
 
+  def create
+    user = User.create(sliced_params)
+    render json: user, root: false
+  end
+
   private
 
   def sliced_params

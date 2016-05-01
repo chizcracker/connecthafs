@@ -51,6 +51,11 @@ describe UsersController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
+    it "ignores non-attributes" do
+      put :create, { id: user_id, "notAttr" => "123" }.merge(update_hash)
+      expect(response).to have_http_status(:success)
+    end
+
     context "updates" do
       it "only provided field" do
         put :update, { id: user_id }.merge(update_hash)
@@ -81,6 +86,38 @@ describe UsersController, type: :controller do
         expect{
           put :update, { id: user_id }.merge(update_hash)
         }.to raise_exception(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
+  describe "POST #create" do
+    let(:post_hash) do
+      { "phoneNumber" => "new_phone_number" }
+    end
+
+    it "returns http success" do
+      post :create, post_hash
+      expect(response).to have_http_status(:success)
+    end
+
+    it "ignores non-attributes" do
+      post :create, post_hash.merge("notAttr" => "123")
+      expect(response).to have_http_status(:success)
+    end
+
+    context "creates" do
+      it "as provided" do
+        post :create, post_hash
+        body = JSON.parse(response.body)
+        expect(body["phoneNumber"]).to eq(post_hash["phoneNumber"])
+        expect(body["address"]).to eq(nil)
+      end
+
+      it "only editable field" do
+        put :update, { id: user_id, name: "some other name" }.merge(update_hash)
+        body = JSON.parse(response.body)
+        expect(body["phoneNumber"]).to eq(update_hash["phoneNumber"])
+        expect(body["name"]).to eq("name")
       end
     end
   end
