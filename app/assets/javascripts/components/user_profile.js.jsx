@@ -78,23 +78,16 @@ var EditableField = React.createClass({
   },
 
   _sendEditRequest: function() {
-    var request = new XMLHttpRequest();
-    request.open(
-      "PUT",
-      '/users/' + this.props.id + '?' +
-        this.props.requestKey + '=' + this._currentValue,
-    );
-    request.onreadystatechange = () => {
-      if(
-        request.readyState === XMLHttpRequest.DONE &&
-        request.status === 200
-      ) {
+    var url = '/users/' + this.props.id + '?' + 
+      this.props.requestKey + '=' + this._currentValue;
+    var request = new Request(url)
+      .setMethod("PUT")
+      .setResponseHandler(() => {
         this.setState({
           value: this._currentValue,
           editactive: !this.state.editactive
         });
-      }
-    };
+      });
     request.send();
   },
 
