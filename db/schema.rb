@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160501023818) do
+ActiveRecord::Schema.define(version: 20160504062522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,8 +62,11 @@ ActiveRecord::Schema.define(version: 20160501023818) do
     t.string   "phone_number"
     t.integer  "class_year"
     t.string   "address"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.datetime "verification_sent_at"
+    t.datetime "verification_confirmed_at"
+    t.datetime "account_confirmed_at"
   end
 
   add_foreign_key "user_educations", "groups", column: "education_id"
