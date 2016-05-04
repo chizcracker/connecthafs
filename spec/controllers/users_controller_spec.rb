@@ -42,12 +42,15 @@ describe UsersController, type: :controller do
   describe "PUT #update" do
     let(:user) { User.create!(name: "name", phone_number: "123-4567", address: "address") }
     let(:user_id) { user.id }
-    let(:update_hash) do
-      { "phoneNumber" => "new_phone_number" }
-    end
+    let(:update_hash) { { "phoneNumber" => "new_phone_number" } }
 
     it "returns http success" do
       put :update, { id: user_id }.merge(update_hash)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "ignores non-attributes" do
+      put :update, { id: user_id, "notAttr" => "123" }.merge(update_hash)
       expect(response).to have_http_status(:success)
     end
 
@@ -83,5 +86,49 @@ describe UsersController, type: :controller do
         }.to raise_exception(ActiveRecord::RecordNotFound)
       end
     end
+  end
+
+  describe "POST #create" do
+    let(:post_hash) { { "name" => "my_name", "classYear" => 123 } }
+
+    it "returns http success" do
+      post :create, post_hash
+      expect(response).to have_http_status(:success)
+    end
+
+    context "when bad params are provided" do
+      context "like missing requirements" do
+        let(:post_hash) { { "name" => "my_name" } }
+
+        it "returns bad request" do
+          expect { post :create, post_hash }.to raise_exception(ActionController::ParameterMissing)
+        end
+      end
+
+      context "like invalid type" do
+        let(:post_hash) { { "name" => "my_name", "classYear" => 123 } }
+
+        xit "returns bad request" do
+          post :create, post_hash
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
+    end
+
+    it "ignores non-attributes" do
+      post :create, post_hash.merge("notAttr" => "123")
+      expect(response).to have_http_status(:success)
+      body = JSON.parse(response.body)
+      expect(body["noAttr"]).to be_nil
+    end
+
+    context "creates" do
+      it "as provided" do
+        post :create, post_hash
+        body = JSON.parse(response.body)
+        expect(body["name"]).to eq("my_name")
+        expect(body["classYear"]).to eq(123)
+      end
+   end
   end
 end
