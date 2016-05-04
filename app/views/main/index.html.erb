@@ -2,6 +2,10 @@
 <html>
 <body>
   <%= react_component(
+    'NavBar',
+    currentUser: @currentuser
+  ) %>
+  <%= react_component(
     'Main',
     results: @result
   ) %>
