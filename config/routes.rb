@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  get 'main', to: 'main#index'
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
+  devise_for :users
+  root to: 'main#index'
+  #get 'main', to: 'main#index'
 
   resources :groups, only: [:show]
   resources :users, only: [:index, :show, :update, :create]
