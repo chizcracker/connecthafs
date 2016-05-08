@@ -1,4 +1,4 @@
 omniauth:
   facebook:
-    app_id: 1712135812358441 # connecthafs web test app
+    app_id: APP_ID # connecthafs web test app
     app_secret: APP_SECRET
