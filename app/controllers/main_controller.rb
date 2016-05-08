@@ -1,5 +1,5 @@
 class MainController < ApplicationController
-  before_filter :load_user, only: [:index]
+  before_action :authenticate_user!
 
   def index
     @result = User.all
@@ -7,11 +7,5 @@ class MainController < ApplicationController
     respond_to do |format|
       format.html
     end
-  end
-
-  private
-
-  def load_user
-    @currentuser = User.first
   end
 end

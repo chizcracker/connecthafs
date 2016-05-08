@@ -1,0 +1,4 @@
+omniauth:
+  facebook:
+    app_id: APP_ID # connecthafs web test app
+    app_secret: APP_SECRET
