@@ -3,11 +3,17 @@
 <body>
   <%= react_component(
     'NavBar',
-    currentUser: @currentuser
+    currentUser: current_user
   ) %>
   <%= react_component(
     'Main',
     results: @result
   ) %>
+
+  <% if user_signed_in? %>
+    <li>
+      <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
+    </li>
+  <% end %>
 </body>
 </html>
